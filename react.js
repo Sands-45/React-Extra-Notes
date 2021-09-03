@@ -446,3 +446,28 @@ class CheckUserAge extends React.Component {
     );
   }
 }
+
+//Give Sibling Elements a Unique Key Attribute
+const frontEndFrameworks = [
+  'React',
+  'Angular',
+  'Ember',
+  'Knockout',
+  'Backbone',
+  'Vue'
+];
+
+function Frameworks() {
+  const renderFrameworks = frontEndFrameworks.map((value, index) => {
+    let id = index
+    return <li key={id}>{value}</li>
+  })
+  return (
+    <div>
+      <h1>Popular Front End JavaScript Frameworks</h1>
+      <ul>
+        {renderFrameworks}
+      </ul>
+    </div>
+  );
+};
