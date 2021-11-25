@@ -1,4 +1,4 @@
-//Redux core principles
+//Redux core concept
 //Default State ============
 const defaultState = {
   authenticate: false,
