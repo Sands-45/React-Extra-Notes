@@ -1,173 +1,75 @@
-# React-Extra-Notes
-//Redux
+//Redux core principles
+//Default State ============
 const defaultState = {
-  login: false
+  authenticate: false,
 };
+const LOGIN = 'LOGIN';
+const LOGOUT = 'LOGOUT';
 
-const reducer = (state = defaultState, action) => {
-  // Change code below this line
-  return action.type === "LOGIN"?{...state,login:true}:state
-  // Change code above this line
-};
-
-const store = Redux.createStore(reducer);
-
-const loginAction = () => {
-  return {
-    type: 'LOGIN'
-  }
-};
-
-// using Switch statement to conditionally update the state in Redux 
-const defaultState = {
-  authenticated: false
-};
-
-const authReducer = (state = defaultState, action) => {
-  // Change code below this line
-  switch(action.type){
-    case "LOGIN":
-    return {authenticated:true}
-    break;
-    case "LOGOUT":
-    return {authenticated:false}
-    break;
-    default:
-    return {authenticated:false}
-  }
-  // Change code above this line
-};
-
-const store = Redux.createStore(authReducer);
-
-const loginUser = () => {
-  return {
-    type: 'LOGIN'
-  }
-};
-
-const logoutUser = () => {
-  return {
-    type: 'LOGOUT'
-  }
-};
-
-// Refactoring the Code above to use const for action type
-
-
-const defaultState = {
-  authenticated: false
-};
-const LOGIN = "LOGIN";
-const LOGOUT = "LOGOUT"
-
-const authReducer = (state = defaultState, action) => {
-
+//Reducer Responsible of updating the state based on the action
+const loginReducer = (state = defaultState, action) => {
   switch (action.type) {
-    case LOGIN: 
-      return {
-        authenticated: true
-      }
-    case LOGOUT: 
-      return {
-        authenticated: false
-      }
-
+    case 'LOGIN':
+      return { aunthenticate: true };
+      break;
+    case 'LOGOUT':
+      return { aunthenticate: false };
+      break;
     default:
       return state;
-
   }
-
 };
 
-const store = Redux.createStore(authReducer);
+//Redux new Store
+const store = Redux.createStore(loginReducer);
 
-const loginUser = () => {
+//Action Creators
+const loginAction = (note) => {
   return {
-    type: LOGIN
-  }
+    type: LOGIN,
+    msg: note,
+  };
 };
 
-const logoutUser = () => {
+const logoutAction = (note) => {
   return {
-    type: LOGOUT
-  }
+    type: LOGOUT,
+    msg: note,
+  };
 };
 
+//Adding a listeners or subscribing to the store chenges
+let count;
+store.subscribe((count) => (count = +1));
 
-// USing combineReducers to combine multiple reducers
-const INCREMENT = 'INCREMENT';
-const DECREMENT = 'DECREMENT';
+//dispatching an action
+store.dispatch({ type: LOGIN });
+store.dispatch({ type: LOGOUT });
 
-const counterReducer = (state = 0, action) => {
-  switch(action.type) {
-    case INCREMENT:
-      return state + 1;
-    case DECREMENT:
-      return state - 1;
-    default:
-      return state;
-  }
+//Combining multiple reducers
+const combinedReducers = Redux.combineReducers({
+  auth: loginReducerOne,
+  authTwo: loginReducerTwo,
+});
+
+//Setting Up a Middleware
+const storeTwo = Redux.createStore(
+  loginReducer,
+  Redux.applyMiddleware(ReduxThunk.default)
+);
+
+//To include Redux Thunk middleware, you pass it as an argument to Redux.applyMiddleware(). This statement is then provided as a second optional parameter to the createStore() function. Take a look at the code at the bottom of the editor to see this. Then, to create an asynchronous action, you return a function in the action creator that takes dispatch as an argument. Within this function, you can dispatch actions and perform asynchronous requests.
+
+const handleAsync = () => {
+  return function (dispatch) {
+    // Dispatch request action here
+    dispatch(requestingData());
+    setTimeout(function () {
+      let data = {
+        users: ['Jeff', 'William', 'Alice'],
+      };
+      // Dispatch received data action here
+      dispatch(receivedData(data));
+    }, 2500);
+  };
 };
-
-const LOGIN = 'LOGIN';
-const LOGOUT = 'LOGOUT';
-
-const authReducer = (state = {authenticated: false}, action) => {
-  switch(action.type) {
-    case LOGIN:
-      return {
-        authenticated: true
-      }
-    case LOGOUT:
-      return {
-        authenticated: false
-      }
-    default:
-      return state;
-  }
-};
-
-const rootReducer = Redux.combineReducers({
-  auth: authReducer,
-  count: counterReducer
-})
-
-const store = Redux.createStore(rootReducer);const INCREMENT = 'INCREMENT';
-const DECREMENT = 'DECREMENT';
-
-const counterReducer = (state = 0, action) => {
-  switch(action.type) {
-    case INCREMENT:
-      return state + 1;
-    case DECREMENT:
-      return state - 1;
-    default:
-      return state;
-  }
-};
-
-const LOGIN = 'LOGIN';
-const LOGOUT = 'LOGOUT';
-
-const authReducer = (state = {authenticated: false}, action) => {
-  switch(action.type) {
-    case LOGIN:
-      return {
-        authenticated: true
-      }
-    case LOGOUT:
-      return {
-        authenticated: false
-      }
-    default:
-      return state;
-  }
-};
-
-const rootReducer = Redux.combineReducers({
-  auth: authReducer,
-  count: counterReducer
-})
-
-const store = Redux.createStore(rootReducer);
